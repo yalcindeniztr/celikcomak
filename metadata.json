@@ -1,0 +1,7 @@
+{
+  "name": "Çelik Çomak: Legend Strike",
+  "description": "Modern 2D take on the traditional Turkish game with modular architecture, local backup, and trendy UI.",
+  "requestFramePermissions": [
+    "notifications"
+  ]
+}

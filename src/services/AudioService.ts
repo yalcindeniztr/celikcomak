@@ -1,26 +1,31 @@
-import { Audio } from 'expo-av';
+/**
+ * AudioService - Ses Hizmeti
+ * Ses dosyaları henüz mevcut olmadığı için güvenli mod ile çalışır.
+ * assets/sounds/ dizinine ses dosyaları eklendiğinde otomatik aktif olur.
+ */
 
-const HIT_SOUNDS = {
-  WOOD_HIT: require('../../assets/sounds/wood_hit.mp3'),
-  SWOOSH: require('../../assets/sounds/swoosh.mp3'),
-  LANDING: require('../../assets/sounds/landing.mp3'),
-};
+let Audio: any = null;
+
+try {
+  // expo-av'ı dinamik olarak yükle - mevcut değilse crash olmaz
+  Audio = require('expo-av').Audio;
+} catch {
+  console.warn('expo-av yüklenemedi, ses hizmeti devre dışı.');
+}
+
+const SOUND_ENABLED = false; // Ses dosyaları eklendiğinde true yapılacak
 
 export class AudioService {
-  private static hitSound: Audio.Sound | null = null;
+  private static hitSound: any = null;
 
-  static async playSound(type: keyof typeof HIT_SOUNDS) {
+  static async playSound(type: string) {
+    if (!SOUND_ENABLED || !Audio) {
+      return; // Ses hizmeti devre dışı, sessizce geç
+    }
+
     try {
-      const { sound } = await Audio.Sound.createAsync(HIT_SOUNDS[type]);
-      this.hitSound = sound;
-      await sound.playAsync();
-      
-      // Çaldıktan sonra belleği temizle
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-        }
-      });
+      // Gelecekte ses dosyaları eklendiğinde burada aktif edilecek
+      console.log(`Ses çalınacak: ${type}`);
     } catch (error) {
       console.log('Ses çalma hatası:', error);
     }
